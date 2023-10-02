@@ -1,1 +1,1 @@
-print('hellow world')
+print('suck your dead nan')
