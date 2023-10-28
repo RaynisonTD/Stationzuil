@@ -1,44 +1,13 @@
-stations = [
-    "Apeldoorn",
-    "Assen",
-    "Amsterdam",
-    "Boxtel",
-    "Breda",
-    "Dordrecht",
-    "Delft",
-    "Deventer",
-    "Enschede",
-    "Gouda",
-    "Groningen",
-    "Den Haag",
-    "Hengelo",
-    "Haarlem",
-    "Helmond",
-    "Hoorn",
-    "Heerlen",
-    "Den Bosch",
-    "Hilversum",
-    "Leiden",
-    "Lelystad",
-    "Leeuwarden",
-    "Maastricht",
-    "Nijmegen",
-    "Oss",
-    "Roermond",
-    "Roosendaal",
-    "Sittard",
-    "Tilburg",
-    "Utrecht",
-    "Venlo",
-    "Vlissingen",
-    "Zaandam",
-    "Zwolle",
-    "Zutphen"]
+import random
+import csv
+from datetime import datetime
 
-"""
-vraagt de gebruiker om naam leftijd en een bericht en slaat deze gegevens op in een .CSV bestand
-"""
-def GebruikerInput():
+stations = ["Utrecht", "Den Haag", "Amsterdam"]
+
+
+
+
+def gebruikerInput():
     naam = input('voer je naam in: ')
     if len(naam) == 0:
         naam = 'anoniem'
@@ -56,9 +25,29 @@ def GebruikerInput():
             print("onbevoegde waarde, voer alsjebleft een leeftijd in")
     while True:
         bericht = input('voer hier je bericht in(maximaal 140 tekens): ')
-        if len(bericht) <= 10:
+        if len(bericht) <= 140:
             break
         else:
             print('het bericht is te lang')
 
-GebruikerInput()
+    # selecteer willekeurig een station
+    willekeurig_station = random.choice(stations)
+
+    # pak de datum en tijd van schrijven
+    datum_tijd = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    # maak het CSV bestand aan
+    csv_file = 'gebruiker_info.csv'
+
+    # maak het bestand klaar voor bewerking
+    with open(csv_file, mode='w', newline='') as file:
+        writer = csv.writer(file)
+
+        # creer een header
+        writer.writerow(['naam', 'leeftijd', 'bericht', 'station', 'tijd van publicatie'])
+
+        # voer de gegevens in
+        writer.writerow([naam, leeftijd, bericht, willekeurig_station, datum_tijd])
+
+
+gebruikerInput()
