@@ -1,14 +1,12 @@
 import csv
-from getpass import getpass
-from datetime import datetime
 
 
 def moderatorAunthentificeren():
-    email = input('voer je moderator email in: ')
-    wachtwoord = getpass('voer je wachtwoord in: ')
+    email = input('voer je moderator naam in: ')
+    wachtwoord = input('voer je wachtwoord in: ')
 
     # check of de moderator de juiste gegevens invoerd
-    if email == 'moderator@mail.com' and wachtwoord == '12345678':
+    if email != '' and wachtwoord != '' and '@' in email:
         return True
     else:
         return False
@@ -29,9 +27,6 @@ def moderatie():
             for rij in csv.DictReader():
                 berichtLijst.append(rij)
 
-        moderatorNaam = input('moderator naam: ')
-        moderatorEmail = input('moderator email: ')
-
-        # maak de goedkeuringstabel(dit gebeurt maar een keer)
+        
 
         # laat het bericht zien voor goedkeuring
