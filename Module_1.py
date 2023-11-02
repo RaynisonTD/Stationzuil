@@ -8,8 +8,6 @@ stations = ["Utrecht", "Den Haag", "Amsterdam"]
 
 
 def gebruikerInput():
-    fileExists = False
-
     naam = input('voer je naam in: ')
     if len(naam) == 0:
         naam = 'anoniem'
@@ -28,7 +26,6 @@ def gebruikerInput():
     while True:
         bericht = input('voer hier je bericht in(maximaal 140 tekens): ')
         if len(bericht) <= 140:
-            print('je bericht is opgeslagen')
             break
         else:
             print('het bericht is te lang')
@@ -39,21 +36,24 @@ def gebruikerInput():
     # pak de datum en tijd van schrijven
     datum_tijd = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-
-
     # maak het CSV bestand aan
-    csv_file = 'berichten.csv'
+    csv_file = 'gebruiker_info.csv'
 
     # maak het bestand klaar voor bewerking
-    with open(csv_file, mode='a', newline='') as file:
+    with open(csv_file, mode='w', newline='') as file:
         writer = csv.writer(file)
 
+<<<<<<< HEAD
         fieldnames = ['naam', 'leeftijd', 'bericht', 'station', 'tijd van publicatie', "goedgekeurd?", "gekeurd door:","moderator e-mail"]
 
 
         # check of de headers al bestaan en maak ze aan als dat niet het geval is. Dit is om ter voorkomen dat oudere data overschreden wordt door nieuwe data
         if file.tell() == 0:
             writer.writerow(fieldnames)
+=======
+        # creer een header
+        writer.writerow(['naam', 'leeftijd', 'bericht', 'station', 'tijd van publicatie'])
+>>>>>>> parent of 9e6b0ad (moderation system code werkt nu)
 
         # voer de gegevens in
         writer.writerow([naam, leeftijd, bericht, willekeurig_station, datum_tijd])
