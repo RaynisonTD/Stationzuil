@@ -1,5 +1,4 @@
-naam,leeftijd,bericht,station,tijd van publicatie,goedgekeurd?,gekeurd door:
-nathan,23,as dasdasdafasfaf,Amsterdam,2023-11-01 16:14:53,Ja,nanana
-rayy,13,yomi,Den Haag,2023-11-01 16:21:20,Nee,RAT
-RYYYY,13,ik ben slecht ,Den Haag,2023-11-01 16:30:58,Ja,ikmmem
-rayyyyyyy,24,het werkt eindelIJK,Den Haag,2023-11-01 16:32:23,Ja,hrhrhrh
+naam,leeftijd,bericht,station,tijd van publicatie,goedgekeurd?,gekeurd door:,moderator e-mail
+ray,18,ik ben heir,Den Haag,2023-11-02 17:31:24,Nee,"('naam', 'ray@')","('nnaam', '@')"
+nathan,12,ik ben natha,Amsterdam,2023-11-02 17:31:53,Ja,"('naam', 'ray@')","('nnaam', '@')"
+jeroen,33,mijn naam is....,Amsterdam,2023-11-02 17:32:12,Ja,"('naam', 'ray@')","('nnaam', '@')"

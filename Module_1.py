@@ -48,7 +48,7 @@ def gebruikerInput():
     with open(csv_file, mode='a', newline='') as file:
         writer = csv.writer(file)
 
-        fieldnames = ['naam', 'leeftijd', 'bericht', 'station', 'tijd van publicatie', "goedgekeurd?", "gekeurd door:"]
+        fieldnames = ['naam', 'leeftijd', 'bericht', 'station', 'tijd van publicatie', "goedgekeurd?", "gekeurd door:","moderator e-mail"]
 
 
         # check of de headers al bestaan en maak ze aan als dat niet het geval is. Dit is om ter voorkomen dat oudere data overschreden wordt door nieuwe data
