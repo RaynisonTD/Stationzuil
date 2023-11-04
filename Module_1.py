@@ -37,23 +37,20 @@ def gebruikerInput():
     datum_tijd = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     # maak het CSV bestand aan
-    csv_file = 'gebruiker_info.csv'
+    csv_file = 'berichten.csv'
 
     # maak het bestand klaar voor bewerking
-    with open(csv_file, mode='w', newline='') as file:
+    with open(csv_file, mode='a', newline='') as file:
         writer = csv.writer(file)
 
-<<<<<<< HEAD
-        fieldnames = ['naam', 'leeftijd', 'bericht', 'station', 'tijd van publicatie', "goedgekeurd?", "gekeurd door:","moderator e-mail"]
+
+        fieldnames = ['naam', 'leeftijd', 'bericht', 'station', 'tijd van publicatie', "goedgekeurd", "gekeurd_door","moderator_email"]
 
 
         # check of de headers al bestaan en maak ze aan als dat niet het geval is. Dit is om ter voorkomen dat oudere data overschreden wordt door nieuwe data
         if file.tell() == 0:
             writer.writerow(fieldnames)
-=======
-        # creer een header
-        writer.writerow(['naam', 'leeftijd', 'bericht', 'station', 'tijd van publicatie'])
->>>>>>> parent of 9e6b0ad (moderation system code werkt nu)
+
 
         # voer de gegevens in
         writer.writerow([naam, leeftijd, bericht, willekeurig_station, datum_tijd])

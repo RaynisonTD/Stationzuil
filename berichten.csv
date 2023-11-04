@@ -1,4 +1,1 @@
-naam,leeftijd,bericht,station,tijd van publicatie,goedgekeurd?,gekeurd door:,moderator e-mail
-ray,18,ik ben heir,Den Haag,2023-11-02 17:31:24,Nee,"('naam', 'ray@')","('nnaam', '@')"
-nathan,12,ik ben natha,Amsterdam,2023-11-02 17:31:53,Ja,"('naam', 'ray@')","('nnaam', '@')"
-jeroen,33,mijn naam is....,Amsterdam,2023-11-02 17:32:12,Ja,"('naam', 'ray@')","('nnaam', '@')"
+naam,leeftijd,bericht,station,tijd van publicatie,goedgekeurd,gekeurd_door,moderator_email
