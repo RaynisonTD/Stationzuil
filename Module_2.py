@@ -1,4 +1,5 @@
 import csv
+
 import os.path
 
 import psycopg2
@@ -16,6 +17,19 @@ def moderatorAunthentificeren():
 
         else:
             print("authentificatie mislukt, probeer het nog eens")
+
+
+
+def moderatorAunthentificeren():
+    email = input('voer je moderator naam in: ')
+    wachtwoord = input('voer je wachtwoord in: ')
+
+    # check of de moderator de juiste gegevens invoerd
+    if email != '' and wachtwoord != '' and '@' in email:
+        return True
+    else:
+        return False
+
 
 
 # moderatie van de berichten
@@ -131,8 +145,12 @@ def moderatie():
 
 
 
+ Module_2
 
 if __name__ == "__main__":
     moderatie()
+
+        
+ main
 
     # laat het bericht zien voor goedkeuring
