@@ -145,12 +145,12 @@ def moderatie():
 
 
 
- Module_2
+
 
 if __name__ == "__main__":
     moderatie()
 
         
- main
+
 
     # laat het bericht zien voor goedkeuring
