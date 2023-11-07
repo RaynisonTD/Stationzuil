@@ -25,6 +25,7 @@ def gebruikerInput():
             print("onbevoegde waarde, voer alsjebleft een leeftijd in")
     while True:
         bericht = input('voer hier je bericht in(maximaal 140 tekens): ')
+
         if len(bericht) <= 140:
             break
         else:
