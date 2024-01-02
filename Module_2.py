@@ -20,17 +20,6 @@ def moderatorAunthentificeren():
 
 
 
-def moderatorAunthentificeren():
-    email = input('voer je moderator naam in: ')
-    wachtwoord = input('voer je wachtwoord in: ')
-
-    # check of de moderator de juiste gegevens invoerd
-    if email != '' and wachtwoord != '' and '@' in email:
-        return True
-    else:
-        return False
-
-
 
 # moderatie van de berichten
 def moderatie():
@@ -97,7 +86,7 @@ def moderatie():
 
 
             try:
-                conn = psycopg2.connect(host="localhost", dbname="Stationzuil", user="postgres",
+                conn = psycopg2.connect(host="20.160.159.26", dbname="Station-Zuil", user="postgres",
                                         password="Obioma-Claudette1973", port=5432)
 
                 cur = conn.cursor()
