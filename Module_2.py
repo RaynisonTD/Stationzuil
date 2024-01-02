@@ -21,6 +21,9 @@ def moderatorAunthentificeren():
 
 
 
+
+
+
 # moderatie van de berichten
 def moderatie():
     # als de moderator is ingelogd
@@ -97,10 +100,11 @@ def moderatie():
                 my_table = "berichten"
 
                 # gebruik de copy command om alle berichten over te kopieren naar de database
-                copy_table = f"COPY {my_table} FROM '{csv_file}' DELIMITER ',' CSV HEADER;"
-                cur.execute(copy_table)
-                conn.commit()
+                with open(csv_file, 'r') as f:
+                    cur.copy_expert(sql=f"COPY {my_table} FROM STDIN WITH CSV HEADER DELIMITER ','", file=f)
 
+                # Commit the transaction
+                conn.commit()
 
 
 
