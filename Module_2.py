@@ -1,151 +1,137 @@
 import csv
-
 import os.path
-
 import psycopg2
+import tkinter as tk
+from tkinter import messagebox
 
+class AuthenticatieGUI:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Moderator Authenticatie")
 
-def moderatorAunthentificeren():
-    while True:
-        email = input('voer je moderator email in: ')
+        self.moderator_email_label = tk.Label(root, text="Moderator Email:")
+        self.moderator_email_label.grid(row=0, column=0, padx=10, pady=10, sticky="e")
+        self.moderator_email_entry = tk.Entry(root)
+        self.moderator_email_entry.grid(row=0, column=1, padx=10, pady=10, sticky="w")
 
-        naam = input('voer je naam in : ')
+        self.moderator_naam_label = tk.Label(root, text="Moderator Naam:")
+        self.moderator_naam_label.grid(row=1, column=0, padx=10, pady=10, sticky="e")
+        self.moderator_naam_entry = tk.Entry(root)
+        self.moderator_naam_entry.grid(row=1, column=1, padx=10, pady=10, sticky="w")
 
-        # check of de moderator de juiste gegevens invoerd
+        self.authenticatie_button = tk.Button(root, text="Authenticeer", command=self.authenticatie)
+        self.authenticatie_button.grid(row=2, column=0, columnspan=2, pady=20)
+
+    def authenticatie(self):
+        email = self.moderator_email_entry.get()
+        naam = self.moderator_naam_entry.get()
+
+        if not email or not naam:
+            messagebox.showerror("Ontbrekende gegevens", "Vul alstublieft zowel de moderator email als naam in.")
+            return
+
+        resultaat = self.moderator_authenticeren(email, naam)
+
+        if resultaat is not None:
+            self.root.destroy()
+            self.open_moderatie_gui(resultaat)
+        else:
+            messagebox.showerror("Authenticatie Mislukt", "Authenticatie is mislukt. Probeer het opnieuw.")
+
+    def moderator_authenticeren(self, email, naam):
         if email == "moderator@mail.nl" and naam != '':
             return naam, email
-
         else:
-            print("authentificatie mislukt, probeer het nog eens")
+            return None
+
+    def open_moderatie_gui(self, resultaat):
+        moderatie_root = tk.Tk()
+        moderatie_root.title("Moderatie Berichten")
+
+        moderatie_gui = ModeratieGUI(moderatie_root, resultaat)
+        moderatie_root.mainloop()
 
 
+class ModeratieGUI:
+    def __init__(self, root, authenticatie_resultaat):
+        self.root = root
+        self.resultaat = authenticatie_resultaat
 
+        self.root.title("Moderatie Berichten")
 
+        self.csv_file = 'berichten.csv'
+        self.gekeurde_berichten = []
 
-
-
-# moderatie van de berichten
-def moderatie():
-    # als de moderator is ingelogd
-    # connectie variabelen
-    cur = None
-    conn = None
-
-    resultaat = moderatorAunthentificeren()
-
-    if resultaat is not None:
-        naam, email = resultaat
-        csv_file = 'berichten.csv'
-
-        # creer een tijdelijk lijst met alle berichten
-        gekeurde_berichten = []
-
-        #geef aan dat het bestand leeg is als de moderator het opent zonder dat er berichten inzitten
-        with open(csv_file, "r") as file:
-            # lees de eerste regel
+        with open(self.csv_file, "r") as file:
             header = next(file)
-
-            # check of er geen berichten zin
             is_leeg = not any(line.strip() for line in file)
 
         if is_leeg:
-            print(f"The CSV bestand {csv_file} is leeg.")
+            messagebox.showinfo("Leeg CSV Bestand", f"Het CSV-bestand {self.csv_file} is leeg.")
+            self.root.destroy()
         else:
-
-            with open(csv_file, mode='r+', newline='') as file:
-                # maak van elke regel in het csv bestand een dictionary
+            with open(self.csv_file, mode='r+', newline='') as file:
                 reader = csv.DictReader(file)
                 fieldnames = reader.fieldnames
 
-                # laat het bericht zien voor goedkeuring
                 for i, rij in enumerate(reader):
+                    print(f"Bericht {i + 1}:")
+                    print(f"Naam: {rij['naam']}")
+                    print(f"Bericht: {rij['bericht']}")
+                    print("Opties:")
+                    print("2. Afkeuren")
+                    print("1. Goedkeuren")
 
-                    print(f"bericht {i + 1}:")
-                    print(f"naam: {rij['naam']}")
-                    print(f"bericht: {rij['bericht']}")
-                    print("opties:")
-                    print("2. afkeuren")
-                    print("1. goedkeuren")
-
-                    keuze = input('word dit berichten goedgekeurd (j) of afgekeurd (n)? (j/n): ')
+                    keuze = input('Wordt dit bericht goedgekeurd (j) of afgekeurd (n)? (j/n): ')
                     goedgekeurd = "Ja" if keuze == "j" else "Nee"
 
-                    # voeg de goedkeuring en de moderator naam toe aan de tabel
-                    if goedgekeurd == 'Ja' or goedgekeurd == 'Nee':
+                    if goedgekeurd == 'Ja':
                         rij["goedgekeurd"] = goedgekeurd
-                        rij['gekeurd_door'] = naam
-                        rij['moderator_email'] = email
+                        rij['gekeurd_door'] = self.resultaat[0]
+                        rij['moderator_email'] = self.resultaat[1]
+                        self.gekeurde_berichten.append(rij)
 
-                    gekeurde_berichten.append(rij)
-
-                # heropen het bestand en vul de 2 moderator kolommen
-                with open(csv_file, mode='w', newline='') as write_file:
+                with open(self.csv_file, mode='w', newline='') as write_file:
                     writer = csv.DictWriter(write_file, fieldnames=fieldnames)
                     writer.writeheader()
-                    writer.writerows(gekeurde_berichten)
+                    writer.writerows(self.gekeurde_berichten)
 
-            # nadat de berichten gekeurd zijn, stuur ze dan naar de gewenste database
-            print('bestanden zijn bijgewerkt in {csv_bestand}')
+            if self.gekeurde_berichten:
+                print('Bestanden zijn bijgewerkt in {csv_bestand}')
 
+                try:
+                    conn = psycopg2.connect(host="20.160.159.26", dbname="Station-Zuil", user="postgres",
+                                            password="Obioma-Claudette1973", port=5432)
+                    cur = conn.cursor()
 
-            try:
-                conn = psycopg2.connect(host="20.160.159.26", dbname="Station-Zuil", user="postgres",
-                                        password="Obioma-Claudette1973", port=5432)
+                    project_directory = os.getcwd()
+                    csv_file = os.path.join(project_directory, 'berichten.csv')
+                    my_table = "berichten"
 
-                cur = conn.cursor()
+                    with open(csv_file, 'r') as f:
+                        cur.copy_expert(sql=f"COPY {my_table} FROM STDIN WITH CSV HEADER DELIMITER ','", file=f)
 
-                # defineer het csv bestand en de datababase tabel waar de gegevens naartoe moeten
-                project_directory = os.getcwd()
-                csv_file = os.path.join(project_directory, 'berichten.csv')
-                my_table = "berichten"
+                    conn.commit()
 
-                # gebruik de copy command om alle berichten over te kopieren naar de database
-                with open(csv_file, 'r') as f:
-                    cur.copy_expert(sql=f"COPY {my_table} FROM STDIN WITH CSV HEADER DELIMITER ','", file=f)
+                except Exception as error:
+                    messagebox.showerror("Database Fout", f"Fout bij het versturen van berichten naar de database:\n{error}")
 
-                # Commit the transaction
-                conn.commit()
+                finally:
+                    if cur is not None:
+                        cur.close()
 
+                        header = None
+                        with open(csv_file, "r") as file:
+                            header = next(file)
 
+                        with open(csv_file, "w", newline='') as file:
+                            file.write(header)
 
-
-
-
-            except Exception as error:
-                print(error)
-
-            finally:
-                # sluit de connectie en maak het csv bestand leeg
-                if cur is not None:
-                    cur.close()
-
-                    header = None
-                    with open(csv_file, "r") as file:
-                        header = next(file)
-
-                    # Reopen the file in write mode and write back the header
-                    with open(csv_file, "w", newline='') as file:
-                        file.write(header)
-
-                if conn is not None:
-                    conn.close()
-
-
-
-
-
-
-
-
-
+                    if conn is not None:
+                        conn.close()
 
 
 if __name__ == "__main__":
-    moderatie()
-
-        
-
-
-
-    # laat het bericht zien voor goedkeuring
-
+    root = tk.Tk()
+    authenticatie_gui = AuthenticatieGUI(root)
+    root.mainloop()

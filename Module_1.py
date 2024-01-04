@@ -1,35 +1,27 @@
 import random
 import csv
 from datetime import datetime
+import tkinter as tk
+from tkinter import messagebox
 
 stations = ["Utrecht", "Den Haag", "Amsterdam"]
 
-
-
-
 def gebruikerInput():
-    naam = input('voer je naam in: ')
+    naam = naam_entry.get()
     if len(naam) == 0:
         naam = 'anoniem'
 
     # vraag vervolgens om een leeftijd
-    while True:
-        try:
-            leeftijd = input("voer een leeftijd in: ")
-            leeftijd_input = int(leeftijd)
-            if leeftijd_input < 0:
-                print("onbevoegde waarde, voer alsjebleft een leeftijd in")
-            else:
-                break
-        except ValueError:
-            print("onbevoegde waarde, voer alsjebleft een leeftijd in")
-    while True:
-        bericht = input('voer hier je bericht in(maximaal 140 tekens): ')
+    leeftijd = leeftijd_entry.get()
+    while not leeftijd.isdigit() or int(leeftijd) < 0:
+        messagebox.showerror("Ongeldige waarde", "Voer alsjeblieft een geldige leeftijd in.")
+        return
 
-        if len(bericht) <= 140:
-            break
-        else:
-            print('het bericht is te lang')
+    # vraag om het bericht
+    bericht = bericht_entry.get()
+    if len(bericht) > 140:
+        messagebox.showerror("Te lang bericht", "Het bericht is te lang (maximaal 140 tekens).")
+        return
 
     # selecteer willekeurig een station
     willekeurig_station = random.choice(stations)
@@ -44,17 +36,41 @@ def gebruikerInput():
     with open(csv_file, mode='a', newline='') as file:
         writer = csv.writer(file)
 
-
         fieldnames = ['naam', 'leeftijd', 'bericht', 'station', 'tijd van publicatie', "goedgekeurd", "gekeurd_door","moderator_email"]
 
-
-        # check of de headers al bestaan en maak ze aan als dat niet het geval is. Dit is om ter voorkomen dat oudere data overschreden wordt door nieuwe data
+        # check of de headers al bestaan en maak ze aan als dat niet het geval is
         if file.tell() == 0:
             writer.writerow(fieldnames)
-
 
         # voer de gegevens in
         writer.writerow([naam, leeftijd, bericht, willekeurig_station, datum_tijd])
 
+    messagebox.showinfo("Bericht verzonden", "Je bericht is succesvol verzonden!")
 
-gebruikerInput()
+# GUI opzetten
+root = tk.Tk()
+root.title("Bericht versturen")
+
+# Naam invoerveld
+naam_label = tk.Label(root, text="Naam:")
+naam_label.grid(row=0, column=0, padx=10, pady=10, sticky="e")
+naam_entry = tk.Entry(root)
+naam_entry.grid(row=0, column=1, padx=10, pady=10, sticky="w")
+
+# Leeftijd invoerveld
+leeftijd_label = tk.Label(root, text="Leeftijd:")
+leeftijd_label.grid(row=1, column=0, padx=10, pady=10, sticky="e")
+leeftijd_entry = tk.Entry(root)
+leeftijd_entry.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+
+# Bericht invoerveld
+bericht_label = tk.Label(root, text="Bericht:")
+bericht_label.grid(row=2, column=0, padx=10, pady=10, sticky="ne")
+bericht_entry = tk.Entry(root, width=50)
+bericht_entry.grid(row=2, column=1, padx=10, pady=10, sticky="nw")
+
+# Verzendknop
+verzend_button = tk.Button(root, text="Verzend", command=gebruikerInput)
+verzend_button.grid(row=3, column=0, columnspan=2, pady=20)
+
+root.mainloop()
